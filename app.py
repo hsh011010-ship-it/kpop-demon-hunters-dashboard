@@ -2,13 +2,17 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
+import os
 
-# 한글 폰트 설정 (Windows: 맑은 고딕)
-font_path = "./assets/font/malgun.ttf"
-font_prop = fm.FontProperties(fname=font_path)
+font_path = "assets/font/malgun.ttf"
 
-plt.rcParams["font.family"] = font_prop.get_name()
-plt.rcParams["axes.unicode_minus"] = False
+if os.path.exists(font_path):
+    font_prop = fm.FontProperties(fname=font_path)
+    plt.rcParams["font.family"] = font_prop.get_name()
+    plt.rcParams["axes.unicode_minus"] = False
+else:
+    st.warning("⚠️ 한글 폰트 파일을 찾을 수 없습니다.")
+
 
 #================================================================
 
@@ -218,26 +222,20 @@ st.markdown("""
 
 #================================================================
 
-from konlpy.tag import Okt
 from collections import Counter
 from wordcloud import WordCloud
 import re
 
 st.divider()
-st.subheader("☁️ 팬덤 담론 WordCloud (형태소·불용어 기반)")
+st.subheader("☁️ 팬덤 담론 WordCloud (불용어 기반)")
 
 stopwords = [
-    "기자", "뉴스", "보도", "관련", "이번", "통해", "대한",
-    "이날", "등", "수", "것", "있다", "없다", "하다"
+    "기자", "뉴스", "보도", "관련", "이번", "통해",
+    "대한", "이날", "등", "수", "것", "있다", "없다", "하다"
 ]
 
-okt = Okt()
-
-# df_filtered 사용
-text_series = (
-    df_filtered["title"].astype(str) + " " +
-    df_filtered["description"].astype(str)
-)
+# title + description 결합
+text_series = df["title"].astype(str) + " " + df["description"].astype(str)
 
 # 텍스트 정제
 clean_text = []
@@ -246,34 +244,27 @@ for text in text_series:
     text = re.sub(r"[^가-힣\s]", "", text)
     clean_text.append(text)
 
-# 형태소 분석 (명사)
-nouns = []
-for sentence in clean_text:
-    nouns += okt.nouns(sentence)
+# 단어 분리
+words = " ".join(clean_text).split()
 
-# 불용어 + 길이 필터
-nouns = [
-    word for word in nouns
-    if word not in stopwords and len(word) > 1
-]
+# 불용어 제거 + 길이 필터
+words = [w for w in words if w not in stopwords and len(w) > 1]
 
-word_freq = Counter(nouns)
+word_freq = Counter(words)
 
-# WordCloud (슬라이더 연동)
 wc = WordCloud(
-    font_path="./assets/font/malgun.ttf",
+    font_path="assets/font/malgun.ttf",
     background_color="white",
-    width=400,
-    height=200,
-    max_words=max_words
+    width=500,
+    height=250,
+    max_words=100
 ).generate_from_frequencies(word_freq)
 
-fig, ax = plt.subplots(figsize=(4, 2.5))
+fig, ax = plt.subplots(figsize=(6, 3))
 ax.imshow(wc, interpolation="bilinear")
 ax.axis("off")
 
 st.pyplot(fig)
-plt.close()
 
 st.markdown("""
 **설명&해석**
