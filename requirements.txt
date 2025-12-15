@@ -8,4 +8,4 @@ altair
 networkx
 wordcloud
 konlpy
-koreanize-matplotlib
+
