@@ -325,12 +325,13 @@ else:
         [(a, b, w) for (a, b), w in filtered_edges.items()]
     )
 
-    fig = plt.figure(figsize=(4, 4))
+fig = plt.figure(figsize=(4, 4))
 pos = nx.spring_layout(G, k=1.3, iterations=50, seed=42)
 
 node_sizes = [G.degree(n) * 250 for n in G.nodes()]
 edge_widths = [G[u][v]['weight'] * 0.03 for u, v in G.edges()]
 
+# 노드
 nx.draw_networkx_nodes(
     G, pos,
     node_size=node_sizes,
@@ -338,6 +339,7 @@ nx.draw_networkx_nodes(
     alpha=0.6
 )
 
+# 엣지
 nx.draw_networkx_edges(
     G, pos,
     width=edge_widths,
@@ -345,16 +347,23 @@ nx.draw_networkx_edges(
     alpha=0.5
 )
 
-nx.draw_networkx_labels(
-    G, pos,
-    font_properties=font_prop,
-    font_size=9
-)
+# 한글 라벨 (matplotlib 직접)
+for node, (x, y) in pos.items():
+    plt.text(
+        x, y,
+        s=node,
+        fontproperties=font_prop,
+        fontsize=9,
+        ha='center',
+        va='center'
+    )
 
 plt.title("키워드 네트워크", fontproperties=font_prop, fontsize=10)
 plt.axis("off")
+
 st.pyplot(fig)
 plt.close()
+
 
 
 st.markdown("""
