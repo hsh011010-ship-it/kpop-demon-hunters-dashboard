@@ -164,8 +164,14 @@ sns.barplot(
     ax=ax
 )
 
-ax.set_xlabel("빈도", fontproperties=font_prop)
-ax.set_ylabel("키워드", fontproperties=font_prop)
+ax.set_xlabel("빈도")
+ax.set_ylabel("키워드")
+
+for label in ax.get_yticklabels():
+    label.set_fontname("Malgun Gothic")
+
+for label in ax.get_xticklabels():
+    label.set_fontname("Malgun Gothic")
 
 st.pyplot(fig)
 
@@ -332,7 +338,7 @@ else:
         with_labels=True,
         node_size=node_sizes,
         width=edge_widths,
-        font_family=plt.rcParams['font.family'],
+        font_family="Malgun Gothic",
         font_size=8,
         node_color='skyblue',
         edge_color='gray',
