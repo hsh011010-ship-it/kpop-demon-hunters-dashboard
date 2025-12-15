@@ -168,10 +168,10 @@ ax.set_xlabel("빈도")
 ax.set_ylabel("키워드")
 
 for label in ax.get_yticklabels():
-    label.set_fontname("Malgun Gothic")
+    label.set_fontproperties(font_prop)
 
 for label in ax.get_xticklabels():
-    label.set_fontname("Malgun Gothic")
+    label.set_fontproperties(font_prop)
 
 st.pyplot(fig)
 
@@ -338,7 +338,7 @@ else:
         with_labels=True,
         node_size=node_sizes,
         width=edge_widths,
-        font_family="Malgun Gothic",
+        font_family=font_prop.get_name(),
         font_size=8,
         node_color='skyblue',
         edge_color='gray',
