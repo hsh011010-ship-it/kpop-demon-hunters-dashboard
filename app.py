@@ -325,42 +325,31 @@ else:
         [(a, b, w) for (a, b), w in filtered_edges.items()]
     )
 
-ffig = plt.figure(figsize=(4, 4))
+    fig = plt.figure(figsize=(4, 4))
 
-pos = nx.spring_layout(G, k=1.6, iterations=50, seed=42)
+    pos = nx.spring_layout(G, k=1.3, iterations=50, seed=42)
 
-node_sizes = [G.degree(n) * 150 for n in G.nodes()]
-edge_widths = [G[u][v]['weight'] * 0.03 for u, v in G.edges()]
+    node_sizes = [G.degree(n) * 250 for n in G.nodes()]
+    edge_widths = [G[u][v]['weight'] * 0.03 for u, v in G.edges()]
 
-nx.draw_networkx_nodes(
-    G, pos,
-    node_size=node_sizes,
-    node_color='skyblue',
-    alpha=0.6
-)
-
-nx.draw_networkx_edges(
-    G, pos,
-    width=edge_widths,
-    edge_color='gray',
-    alpha=0.5
-)
-
-for node, (x, y) in pos.items():
-    plt.text(
-        x, y + 0.02,
-        s=node,
-        fontproperties=font_prop,
-        fontsize=7,
-        ha='center',
-        va='center'
+    nx.draw_networkx(
+        G,
+        pos,
+        with_labels=True,
+        node_size=node_sizes,
+        width=edge_widths,
+        font_family=plt.rcParams['font.family'],
+        font_size=8,
+        node_color='skyblue',
+        edge_color='gray',
+        alpha=0.5
     )
 
-plt.title("키워드 네트워크", fontproperties=font_prop, fontsize=10)
-plt.axis("off")
+    plt.title("키워드 네트워크", fontsize=10)
+    plt.axis('off')
 
-st.pyplot(fig)
-plt.close()
+    st.pyplot(fig, use_container_width=False)
+    plt.close()
 
 
 
